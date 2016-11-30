@@ -16,18 +16,13 @@
 
 package org.litepal.litepalsample.activity;
 
-import org.litepal.litepalsample.R;
-import org.litepal.litepalsample.model.Album;
-import org.litepal.litepalsample.model.Singer;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-import java.util.Date;
-import java.util.UUID;
+import org.litepal.litepalsample.R;
 
 public class MainActivity extends Activity implements OnClickListener {
 
@@ -56,6 +51,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			ManageTablesActivity.actionStart(this);
 			break;
 		case R.id.crud_btn:
+			//增删改查的操作
 			CRUDActivity.actionStart(this);
 			break;
 		case R.id.aggregate_btn:

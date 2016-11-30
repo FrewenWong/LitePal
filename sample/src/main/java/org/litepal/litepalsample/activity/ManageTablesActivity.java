@@ -16,8 +16,6 @@
 
 package org.litepal.litepalsample.activity;
 
-import org.litepal.litepalsample.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,39 +24,44 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import org.litepal.litepalsample.R;
+
+/**
+ * 表的操作Activity
+ */
 public class ManageTablesActivity extends Activity implements OnClickListener {
 
-	private Button mCurrentModelStructureBtn;
-	
-	private Button mOperateDatabaseBtn;
+    private Button mCurrentModelStructureBtn;
 
-	public static void actionStart(Context context) {
-		Intent intent = new Intent(context, ManageTablesActivity.class);
-		context.startActivity(intent);
-	}
+    private Button mOperateDatabaseBtn;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.manage_tables_layout);
-		mCurrentModelStructureBtn = (Button) findViewById(R.id.current_model_structure_btn);
-		mOperateDatabaseBtn = (Button) findViewById(R.id.operate_database_btn);
-		mCurrentModelStructureBtn.setOnClickListener(this);
-		mOperateDatabaseBtn.setOnClickListener(this);
-	}
+    public static void actionStart(Context context) {
+        Intent intent = new Intent(context, ManageTablesActivity.class);
+        context.startActivity(intent);
+    }
 
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.current_model_structure_btn:
-			ModelListActivity.actionStart(this);
-			break;
-		case R.id.operate_database_btn:
-			TableListActivity.actionStart(this);
-			break;
-		default:
-			break;
-		}
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.manage_tables_layout);
+        mCurrentModelStructureBtn = (Button) findViewById(R.id.current_model_structure_btn);
+        mOperateDatabaseBtn = (Button) findViewById(R.id.operate_database_btn);
+        mCurrentModelStructureBtn.setOnClickListener(this);
+        mOperateDatabaseBtn.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.current_model_structure_btn:
+                ModelListActivity.actionStart(this);
+                break;
+            case R.id.operate_database_btn:
+                TableListActivity.actionStart(this);
+                break;
+            default:
+                break;
+        }
+    }
 
 }

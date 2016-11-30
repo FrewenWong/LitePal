@@ -16,18 +16,11 @@
 
 package org.litepal.litepalsample.activity;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.litepal.litepalsample.R;
-import org.litepal.util.BaseUtility;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,78 +29,92 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.litepal.litepalsample.R;
+import org.litepal.util.BaseUtility;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ModelStructureActivity extends Activity {
 
-	public static final String CLASS_NAME = "class_name";
+    public static final String CLASS_NAME = "class_name";
 
-	private ListView mModelStructureListView;
+    private ListView mModelStructureListView;
 
-	private ArrayAdapter<Field> mAdapter;
+    private ArrayAdapter<Field> mAdapter;
 
-	private String mClassName;
+    private String mClassName;
 
-	private List<Field> mList = new ArrayList<Field>();
+    private List<Field> mList = new ArrayList<Field>();
 
-	public static void actionStart(Context context, String className) {
-		Intent intent = new Intent(context, ModelStructureActivity.class);
-		intent.putExtra(CLASS_NAME, className);
-		context.startActivity(intent);
-	}
+    public static void actionStart(Context context, String className) {
+        Intent intent = new Intent(context, ModelStructureActivity.class);
+        intent.putExtra(CLASS_NAME, className);
+        context.startActivity(intent);
+    }
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.model_structure_layout);
-		mClassName = getIntent().getStringExtra(CLASS_NAME);
-		mModelStructureListView = (ListView) findViewById(R.id.model_structure_listview);
-		analyzeModelStructure();
-		mAdapter = new MyArrayAdapter(this, 0, mList);
-		mModelStructureListView.setAdapter(mAdapter);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.model_structure_layout);
+        mClassName = getIntent().getStringExtra(CLASS_NAME);
+        mModelStructureListView = (ListView) findViewById(R.id.model_structure_listview);
+        //分析传递过来的Model的数据
+        analyzeModelStructure();
+        
+        mAdapter = new MyArrayAdapter(this, 0, mList);
+        mModelStructureListView.setAdapter(mAdapter);
+    }
 
-	private void analyzeModelStructure() {
-		Class<?> dynamicClass = null;
-		try {
-			dynamicClass = Class.forName(mClassName);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		Field[] fields = dynamicClass.getDeclaredFields();
-		for (Field field : fields) {
-			int modifiers = field.getModifiers();
-			if (Modifier.isPrivate(modifiers) && !Modifier.isStatic(modifiers)) {
-				Class<?> fieldTypeClass = field.getType();
-				String fieldType = fieldTypeClass.getName();
-				if (BaseUtility.isFieldTypeSupported(fieldType)) {
-					mList.add(field);
-				}
-			}
-		}
-	}
+    private void analyzeModelStructure() {
+        Class<?> dynamicClass = null;
+        //通过反射拿到这个类
+        try {
+            dynamicClass = Class.forName(mClassName);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        //或者定义的变量
+        Field[] fields = dynamicClass.getDeclaredFields();
+        Log.i("ModelStructureActivity", "Msg:dynamicClass==fields==" + fields.length);
+        for (Field field : fields) {
+            Log.i("ModelStructureActivity", "Msg:field==" + field.getName());
+            int modifiers = field.getModifiers();
+            if (Modifier.isPrivate(modifiers) && !Modifier.isStatic(modifiers)) {
+                Class<?> fieldTypeClass = field.getType();
+                String fieldType = fieldTypeClass.getName();
+                if (BaseUtility.isFieldTypeSupported(fieldType)) {
+                    mList.add(field);
+                }
+            }
+        }
+    }
 
-	class MyArrayAdapter extends ArrayAdapter<Field> {
+    class MyArrayAdapter extends ArrayAdapter<Field> {
 
-		public MyArrayAdapter(Context context, int textViewResourceId, List<Field> objects) {
-			super(context, textViewResourceId, objects);
-		}
+        public MyArrayAdapter(Context context, int textViewResourceId, List<Field> objects) {
+            super(context, textViewResourceId, objects);
+        }
 
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view;
-			Field field = getItem(position);
-			if (convertView == null) {
-				view = LayoutInflater.from(getContext()).inflate(R.layout.model_structure_item, null);
-			} else {
-				view = convertView;
-			}
-			TextView text1 = (TextView) view.findViewById(R.id.text_1);
-			text1.setText(field.getName());
-			TextView text2 = (TextView) view.findViewById(R.id.text_2);
-			text2.setText(field.getType().getName());
-			return view;
-		}
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view;
+            Field field = getItem(position);
+            if (convertView == null) {
+                view = LayoutInflater.from(getContext()).inflate(R.layout.model_structure_item, null);
+            } else {
+                view = convertView;
+            }
+            TextView text1 = (TextView) view.findViewById(R.id.text_1);
+            text1.setText(field.getName());
+            TextView text2 = (TextView) view.findViewById(R.id.text_2);
+            text2.setText(field.getType().getName());
+            return view;
+        }
 
-	}
+    }
 
 }

@@ -16,15 +16,15 @@
 
 package org.litepal.parser;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.text.TextUtils;
 
 import org.litepal.exceptions.InvalidAttributesException;
 import org.litepal.util.BaseUtility;
 import org.litepal.util.Const;
 import org.litepal.util.SharedUtil;
 
-import android.text.TextUtils;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The object model for the litepal.xml file. Once database connection happens,
@@ -80,6 +80,8 @@ public final class LitePalAttr {
 
 	/**
 	 * Provide a way to get the instance of LitePalAttr.
+	 * 获取LitePal的对象
+	 *
 	 * @return the singleton instance of LitePalAttr
 	 */
 	public static LitePalAttr getInstance() {
@@ -87,14 +89,14 @@ public final class LitePalAttr {
 			synchronized (LitePalAttr.class) {
 				if (litePalAttr == null) {
 					litePalAttr = new LitePalAttr();
-                    if (BaseUtility.isLitePalXMLExists()) {
-                        LitePalConfig config = LitePalParser.parseLitePalConfiguration();
-                        litePalAttr.setDbName(config.getDbName());
-                        litePalAttr.setVersion(config.getVersion());
-                        litePalAttr.setClassNames(config.getClassNames());
-                        litePalAttr.setCases(config.getCases());
-                        litePalAttr.setStorage(config.getStorage());
-                    }
+					if (BaseUtility.isLitePalXMLExists()) {
+						LitePalConfig config = LitePalParser.parseLitePalConfiguration();
+						litePalAttr.setDbName(config.getDbName());
+						litePalAttr.setVersion(config.getVersion());
+						litePalAttr.setClassNames(config.getClassNames());
+						litePalAttr.setCases(config.getCases());
+						litePalAttr.setStorage(config.getStorage());
+					}
 				}
 			}
 		}
